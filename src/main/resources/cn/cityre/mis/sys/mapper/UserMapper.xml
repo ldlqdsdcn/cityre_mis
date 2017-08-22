@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cityre.mis.sys.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="cn.cityre.mis.sys.model.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="init" jdbcType="CHAR" property="init" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="isactive" jdbcType="CHAR" property="isactive" />
+    <result column="client_id" jdbcType="INTEGER" property="clientId" />
+    <result column="org_id" jdbcType="INTEGER" property="orgId" />
+    <result column="saltvalue" jdbcType="VARCHAR" property="saltvalue" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.cityre.mis.sys.model.User">
+    <result column="user_pic" jdbcType="LONGVARBINARY" property="userPic" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, password, name, init, email, telephone, isactive, client_id, org_id, 
+    saltvalue
+  </sql>
+  <sql id="Blob_Column_List">
+    user_pic
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.cityre.mis.sys.model.User">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_user (username, password, name, 
+      init, email, telephone, 
+      isactive, client_id, org_id, 
+      saltvalue, user_pic)
+    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{init,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, 
+      #{isactive,jdbcType=CHAR}, #{clientId,jdbcType=INTEGER}, #{orgId,jdbcType=INTEGER}, 
+      #{saltvalue,jdbcType=VARCHAR}, #{userPic,jdbcType=LONGVARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.cityre.mis.sys.model.User">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="init != null">
+        init,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="telephone != null">
+        telephone,
+      </if>
+      <if test="isactive != null">
+        isactive,
+      </if>
+      <if test="clientId != null">
+        client_id,
+      </if>
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="saltvalue != null">
+        saltvalue,
+      </if>
+      <if test="userPic != null">
+        user_pic,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="init != null">
+        #{init,jdbcType=CHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="isactive != null">
+        #{isactive,jdbcType=CHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="saltvalue != null">
+        #{saltvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="userPic != null">
+        #{userPic,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.cityre.mis.sys.model.User">
+    update sys_user
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="init != null">
+        init = #{init,jdbcType=CHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="isactive != null">
+        isactive = #{isactive,jdbcType=CHAR},
+      </if>
+      <if test="clientId != null">
+        client_id = #{clientId,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="saltvalue != null">
+        saltvalue = #{saltvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="userPic != null">
+        user_pic = #{userPic,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.cityre.mis.sys.model.User">
+    update sys_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      init = #{init,jdbcType=CHAR},
+      email = #{email,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      isactive = #{isactive,jdbcType=CHAR},
+      client_id = #{clientId,jdbcType=INTEGER},
+      org_id = #{orgId,jdbcType=INTEGER},
+      saltvalue = #{saltvalue,jdbcType=VARCHAR},
+      user_pic = #{userPic,jdbcType=LONGVARBINARY}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.cityre.mis.sys.model.User">
+    update sys_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      init = #{init,jdbcType=CHAR},
+      email = #{email,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      isactive = #{isactive,jdbcType=CHAR},
+      client_id = #{clientId,jdbcType=INTEGER},
+      org_id = #{orgId,jdbcType=INTEGER},
+      saltvalue = #{saltvalue,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
