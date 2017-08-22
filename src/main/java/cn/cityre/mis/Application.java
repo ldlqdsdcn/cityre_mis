@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
  * Created by 刘大磊 on 2017/8/22 8:34.
  */
 @EnableAutoConfiguration
-@Import(value = { WebAppConfig.class})
+@Import(value = { RootConfig.class,WebAppConfig.class})
 public class Application extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
