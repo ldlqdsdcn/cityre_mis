@@ -4,7 +4,7 @@
 
 package org.mybatis.pagination;
 
-import com.dsdl.eidea.util.StringUtil;
+import cn.cityre.mis.util.StringUtil;
 import com.google.common.base.Joiner;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.logging.Log;

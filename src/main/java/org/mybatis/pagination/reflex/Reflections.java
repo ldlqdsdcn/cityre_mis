@@ -1,6 +1,6 @@
 package org.mybatis.pagination.reflex;
 
-import com.dsdl.eidea.util.StringUtil;
+import cn.cityre.mis.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

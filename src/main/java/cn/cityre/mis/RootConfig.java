@@ -5,29 +5,34 @@ import net.sf.ehcache.CacheManager;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.log4j.Logger;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnJndi;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 
 import javax.sql.DataSource;
+import javax.xml.crypto.Data;
 
 /**
  * Created by 刘大磊 on 2017/8/22 9:02.
  */
 @Configuration
-public class RootConfig {
+@MapperScan(basePackages = {
+        "cn.cityre.mis.sys.dao" }, sqlSessionFactoryRef = "misSqlSessionFactory")
+public class RootConfig implements EnvironmentAware {
     private static final Logger logger = Logger.getLogger(RootConfig.class);
-    @Autowired
     Environment env;
 
     /**
@@ -49,15 +54,6 @@ public class RootConfig {
         ehCacheCacheManager.setTransactionAware(true);
         return ehCacheCacheManager;
     }
-
-    @Bean(name = "misMapperScannerConfigurer")
-    public MapperScannerConfigurer mapperScannerConfigurer() {
-        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-        mapperScannerConfigurer.setBasePackage("cn.cityre.mis.sys.*.dao");
-        mapperScannerConfigurer.setSqlSessionFactoryBeanName("misSqlSessionFactory");
-        return mapperScannerConfigurer;
-    }
-
     @Bean(name = "misSqlSessionFactory")
     public SqlSessionFactory supportSqlSessionFactory(@Qualifier("misDataSource") DataSource supportDataSource)
             throws Exception {
@@ -97,5 +93,17 @@ public class RootConfig {
         dataSource.setStatementsCacheSize(100);
         dataSource.setInitSQL("SET NAMES 'utf8mb4'");
         return dataSource;
+    }
+    /**
+     * 配置事务管理器
+     */
+    @Bean
+    @Primary
+    public DataSourceTransactionManager transactionManager(@Qualifier("misDataSource")DataSource dateSource) throws Exception{
+        return new DataSourceTransactionManager(dateSource);
+    }
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.env=environment;
     }
 }

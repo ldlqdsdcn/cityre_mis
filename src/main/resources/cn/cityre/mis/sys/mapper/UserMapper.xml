@@ -17,6 +17,12 @@
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.cityre.mis.sys.model.User">
     <result column="user_pic" jdbcType="LONGVARBINARY" property="userPic" />
   </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <if test="username!=null"> and username=#{username,jdbcType=VARCHAR}</if>
+    </where>
+  </sql>
+
   <sql id="Base_Column_List">
     id, username, password, name, init, email, telephone, isactive, client_id, org_id, 
     saltvalue
@@ -24,6 +30,16 @@
   <sql id="Blob_Column_List">
     user_pic
   </sql>
+  <select id="selectList" parameterType="java.util.Map" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />

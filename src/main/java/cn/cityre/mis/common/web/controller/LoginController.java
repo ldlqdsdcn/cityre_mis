@@ -1,10 +1,12 @@
 package cn.cityre.mis.common.web.controller;
 
 import cn.cityre.mis.common.exception.AccountException;
+import cn.cityre.mis.sys.dao.UserMapper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 public class LoginController {
+    @Autowired
+    private UserMapper userMapper;
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String showLogin() {
         return "login";
@@ -43,6 +47,7 @@ public class LoginController {
             return modelAndView;
         }
         modelAndView.setViewName("redirect:/");
+
         return modelAndView;
     }
 }
