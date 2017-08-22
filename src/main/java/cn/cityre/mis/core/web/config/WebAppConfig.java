@@ -20,6 +20,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 public class WebAppConfig extends WebMvcConfigurerAdapter {
     /**
      * 设置viewResolver
+     *
      * @return
      */
     @Bean
@@ -32,10 +33,11 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         return resolver;
 
     }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         super.addResourceHandlers(registry);
-        registry.addResourceHandler("/**").addResourceLocations("/") .setCachePeriod(0);
+        registry.addResourceHandler("/**").addResourceLocations("/").setCachePeriod(0);
     }
 
     /**
