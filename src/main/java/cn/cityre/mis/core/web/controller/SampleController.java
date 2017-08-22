@@ -1,7 +1,5 @@
 package cn.cityre.mis.core.web.controller;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -10,7 +8,6 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * Created by 刘大磊 on 2017/8/21 16:12.
  */
-@EnableAutoConfiguration
 @Controller
 public class SampleController {
 

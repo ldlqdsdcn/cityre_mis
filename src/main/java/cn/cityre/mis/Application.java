@@ -1,17 +1,19 @@
 package cn.cityre.mis;
 
-import cn.cityre.mis.core.web.controller.SampleController;
-import org.springframework.boot.SpringApplication;
+import cn.cityre.mis.core.web.config.WebAppConfig;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Import;
 
 /**
- * Created by 刘大磊 on 2017/8/21 15:50.
+ * Created by 刘大磊 on 2017/8/22 8:34.
  */
 @EnableAutoConfiguration
+@Import(value = { WebAppConfig.class})
 public class Application extends SpringBootServletInitializer {
-
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(SampleController.class, args);
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Application.class);
     }
 }
