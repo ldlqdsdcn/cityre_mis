@@ -1,25 +1,20 @@
 package cn.cityre.mis;
 
-import com.jolbox.bonecp.BoneCPDataSource;
+import cn.cityre.mis.core.dao.config.MisDaoConfig;
 import net.sf.ehcache.CacheManager;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.log4j.Logger;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnJndi;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
@@ -29,11 +24,25 @@ import javax.sql.DataSource;
  * Created by 刘大磊 on 2017/8/22 9:02.
  */
 @Configuration
-@MapperScan(basePackages = {
-        "cn.cityre.mis.sys.dao"}, sqlSessionFactoryRef = "misSqlSessionFactory")
+@Import(value = {MisDaoConfig.class})
+@ComponentScan("cn.cityre.mis.**.service")
 public class RootConfig implements EnvironmentAware {
     private static final Logger logger = Logger.getLogger(RootConfig.class);
+
     Environment env;
+
+    /*@MapperScan(basePackages = {
+        "cn.cityre.mis.sys.dao"}, sqlSessionFactoryRef = "misSqlSessionFactory")
+@MapperScan(basePackages = {
+        "cn.cityre.mis.sys.dao"}, sqlSessionFactoryRef = "misSqlSessionFactory")
+@MapperScan(basePackages = {
+        "cn.cityre.mis.sys.dao"}, sqlSessionFactoryRef = "misSqlSessionFactory")
+@MapperScan(basePackages = {
+        "cn.cityre.mis.sys.dao"}, sqlSessionFactoryRef = "misSqlSessionFactory")
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="cn.cityre.mis.center.*.dao"/>
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryCenter"/>
+</bean>*/
 
     /**
      * ehcache配置
@@ -55,79 +64,82 @@ public class RootConfig implements EnvironmentAware {
         return ehCacheCacheManager;
     }
 
-    @Bean(name = "misSqlSessionFactory")
-    public SqlSessionFactory supportSqlSessionFactory(@Qualifier("misDataSource") DataSource supportDataSource)
+    /**
+     * 中心库
+     *
+     * @param centerDataSource
+     * @return
+     * @throws Exception
+     */
+//    @Bean(name = "centerSqlSessionFactory")
+//    public SqlSessionFactory centerSqlSessionFactory(@Qualifier("centerDataSource") DataSource centerDataSource)
+//            throws Exception {
+//        SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+//        sqlSessionFactory.setDataSource(centerDataSource);
+//        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+//        sqlSessionFactory.setConfigLocation(resolver.getResource("classpath:mybatis-config.xml"));
+//        sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:cn/cityre/mis/center/mapper/*Mapper.xml"));
+//        return sqlSessionFactory.getObject();
+//    }
+
+    /**
+     * 中心账户库
+     *
+     * @param accountDataSource
+     * @return
+     * @throws Exception
+     */
+/*    @Bean(name = "accountSqlSessionFactory")
+    public SqlSessionFactory accountSqlSessionFactory(@Qualifier("accountDataSource") DataSource accountDataSource)
             throws Exception {
         SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
-        sqlSessionFactory.setDataSource(supportDataSource);
+        sqlSessionFactory.setDataSource(accountDataSource);
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sqlSessionFactory.setConfigLocation(resolver.getResource("classpath:mybatis-config.xml"));
-        sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:cn/cityre/mis/sys/mapper/*Mapper.xml"));
+        sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:cn/cityre/mis/account/mapper*//*Mapper.xml"));
         return sqlSessionFactory.getObject();
-    }
+    }*/
 
     /**
-     * mis 库 jndi
+     * 城市中心库
      *
+     * @param cityre_centerDataSource
      * @return
+     * @throws Exception
      */
-    @Bean(name = {"misDataSource"})
-    @ConditionalOnJndi("jdbc/mis")
-    public DataSource misDataSourceJNDI() {
-        logger.info("Load misDataSource from JNDI");
-        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
-        dsLookup.setResourceRef(true);
-        DataSource dataSource = dsLookup.getDataSource("jdbc/mis");
-        return dataSource;
-    }
-
-    /**
-     * mis库 jdbc
-     *
-     * @return
-     */
-    @Bean(name = {"misDataSource"}, destroyMethod = "close")
-    @ConditionalOnMissingBean(value = DataSource.class, name = "misDataSource")
-    public DataSource misDataSource() {
-        logger.info("Create misDataSource");
-        BoneCPDataSource dataSource = new BoneCPDataSource();
-        dataSource.setDriverClass(env.getProperty("jdbc.mis.connection.driver_class"));
-        dataSource.setJdbcUrl(env.getProperty("jdbc.mis.connection.url"));
-        dataSource.setUsername(env.getProperty("jdbc.mis.connection.username"));
-        dataSource.setPassword(env.getProperty("jdbc.mis.connection.password"));
-        dataSource.setIdleConnectionTestPeriodInMinutes(60);
-        dataSource.setIdleMaxAgeInMinutes(240);
-        dataSource.setMaxConnectionsPerPartition(10);
-        dataSource.setMinConnectionsPerPartition(1);
-        dataSource.setPartitionCount(2);
-        dataSource.setAcquireIncrement(5);
-        dataSource.setStatementsCacheSize(100);
-        dataSource.setInitSQL("SET NAMES 'utf8mb4'");
-        return dataSource;
-    }
+/*    @Bean(name = "cityre_centerSqlSessionFactory")
+    public SqlSessionFactory cityre_centerSqlSessionFactory(@Qualifier("cityre_centerDataSource") DataSource cityre_centerDataSource)
+            throws Exception {
+        SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+        sqlSessionFactory.setDataSource(cityre_centerDataSource);
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        sqlSessionFactory.setConfigLocation(resolver.getResource("classpath:mybatis-config.xml"));
+        sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:cn/cityre/mis/cityre_center/mapper*//*Mapper.xml"));
+        return sqlSessionFactory.getObject();
+    }*/
 
     /**
      * 中心库jndi
      *
      * @return
      */
-    @Bean(name = {"centerDataSource"})
-    @ConditionalOnJndi("jdbc/center")
-    public DataSource centerDataSourceJNDI() {
-        logger.info("Load centerDataSource from JNDI");
-        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
-        dsLookup.setResourceRef(true);
-        DataSource dataSource = dsLookup.getDataSource("jdbc/center");
-        return dataSource;
-    }
+//    @Bean(name = {"centerDataSource"})
+//    @ConditionalOnJndi("jdbc/center")
+//    public DataSource centerDataSourceJNDI() {
+//        logger.info("Load centerDataSource from JNDI");
+//        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
+//        dsLookup.setResourceRef(true);
+//        DataSource dataSource = dsLookup.getDataSource("jdbc/center");
+//        return dataSource;
+//    }
 
     /**
      * 中心库 jdbc
      *
      * @return
      */
-    @Bean(name = {"centerDataSource"}, destroyMethod = "close")
-    @ConditionalOnMissingBean(value = DataSource.class, name = "centerDataSource")
+/*    @Bean(name = {"centerDataSource"}, destroyMethod = "close")
+    //@ConditionalOnMissingBean(value = BoneCPDataSource.class, name = "centerDataSource")
     public DataSource supportDataSource() {
         logger.info("Create centerDataSource");
         BoneCPDataSource dataSource = new BoneCPDataSource();
@@ -144,29 +156,30 @@ public class RootConfig implements EnvironmentAware {
         dataSource.setStatementsCacheSize(100);
         dataSource.setInitSQL("SET NAMES 'utf8mb4'");
         return dataSource;
-    }
+    }*/
+
     /**
      * 中心账户库jndi
      *
      * @return
      */
-    @Bean(name = {"accountDataSource"})
-    @ConditionalOnJndi("jdbc/account")
-    public DataSource accountDataSourceJNDI() {
-        logger.info("Load accountDataSource from JNDI");
-        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
-        dsLookup.setResourceRef(true);
-        DataSource dataSource = dsLookup.getDataSource("jdbc/account");
-        return dataSource;
-    }
+//    @Bean("accountDataSource")
+//    @ConditionalOnJndi("jdbc/account")
+//    public DataSource accountDataSourceJNDI() {
+//        logger.info("Load accountDataSource from JNDI");
+//        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
+//        dsLookup.setResourceRef(true);
+//        DataSource dataSource = dsLookup.getDataSource("jdbc/account");
+//        return dataSource;
+//    }
 
     /**
      * 中心账户库 jdbc
      *
      * @return
      */
-    @Bean(name = {"accountDataSource"}, destroyMethod = "close")
-    @ConditionalOnMissingBean(value = DataSource.class, name = "accountDataSource")
+/*    @Bean(name = {"accountDataSource"}, destroyMethod = "close")
+    //@ConditionalOnMissingBean(value = BoneCPDataSource.class, name = "accountDataSource")
     public DataSource accountDataSource() {
         logger.info("Create accountDataSource");
         BoneCPDataSource dataSource = new BoneCPDataSource();
@@ -183,31 +196,31 @@ public class RootConfig implements EnvironmentAware {
         dataSource.setStatementsCacheSize(100);
         dataSource.setInitSQL("SET NAMES 'utf8mb4'");
         return dataSource;
-    }
+    }*/
 
     /**
      * 城市中心库jndi
      *
      * @return
      */
-    @Bean(name = {"cityre_centerDataSource"})
-    @ConditionalOnJndi("jdbc/cityre_center")
-    public DataSource cityre_centerDataSourceJNDI() {
-
-        logger.info("Load cityre_centerDataSource from JNDI");
-        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
-        dsLookup.setResourceRef(true);
-        DataSource dataSource = dsLookup.getDataSource("jdbc/cityre_center");
-        return dataSource;
-    }
+//    @Bean(name = {"cityre_centerDataSource"})
+//    @ConditionalOnJndi("jdbc/cityre_center")
+//    public DataSource cityre_centerDataSourceJNDI() {
+//
+//        logger.info("Load cityre_centerDataSource from JNDI");
+//        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
+//        dsLookup.setResourceRef(true);
+//        DataSource dataSource = dsLookup.getDataSource("jdbc/cityre_center");
+//        return dataSource;
+//    }
 
     /**
      * 城市中心库 jdbc
      *
      * @return
      */
-    @Bean(name = {"cityre_centerDataSource"}, destroyMethod = "close")
-    @ConditionalOnMissingBean(value = DataSource.class, name = "cityre_centerDataSource")
+/*    @Bean(name = {"cityre_centerDataSource"}, destroyMethod = "close")
+    //@ConditionalOnMissingBean(value = BoneCPDataSource.class, name = "cityre_centerDataSource")
     public DataSource cityre_centerDataSource() {
         logger.info("Create cityre_centerDataSource");
         BoneCPDataSource dataSource = new BoneCPDataSource();
@@ -224,13 +237,12 @@ public class RootConfig implements EnvironmentAware {
         dataSource.setStatementsCacheSize(100);
         dataSource.setInitSQL("SET NAMES 'utf8mb4'");
         return dataSource;
-    }
+    }*/
 
     /**
      * 配置事务管理器
      */
     @Bean
-    @Primary
     public DataSourceTransactionManager transactionManager(@Qualifier("misDataSource") DataSource dateSource) throws Exception {
         return new DataSourceTransactionManager(dateSource);
     }
@@ -250,6 +262,14 @@ public class RootConfig implements EnvironmentAware {
         javaMailSender.setDefaultEncoding(env.getProperty("mailserver.default_encoding"));
         javaMailSender.getJavaMailProperties().put("mail.smtp.auth", Boolean.parseBoolean(env.getProperty("mailserver.smtp.auth")));
         return javaMailSender;
+    }
+
+    @Bean
+    public MapperScannerConfigurer misMapperScannerConfigurer() {
+        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
+        mapperScannerConfigurer.setBasePackage("cn.cityre.mis.sys.dao");
+        mapperScannerConfigurer.setSqlSessionFactoryBeanName("misSqlSessionFactory");
+        return mapperScannerConfigurer;
     }
 
     @Override

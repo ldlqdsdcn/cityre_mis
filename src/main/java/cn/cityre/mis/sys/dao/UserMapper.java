@@ -22,6 +22,13 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
+    /**
+     * 根据条件查询用户记录
+     * @param param
+     * @return
+     */
+    User selectByExample(Map<String, Object> param);
+
     List<User> selectList(Map<String, Object> param);
 
     /**

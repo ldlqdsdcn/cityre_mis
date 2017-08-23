@@ -30,6 +30,17 @@
   <sql id="Blob_Column_List">
     user_pic
   </sql>
+  <select id="selectByExample" parameterType="java.util.Map" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    limit 1
+  </select>
   <select id="selectList" parameterType="java.util.Map" resultMap="ResultMapWithBLOBs">
     select
     <include refid="Base_Column_List" />
