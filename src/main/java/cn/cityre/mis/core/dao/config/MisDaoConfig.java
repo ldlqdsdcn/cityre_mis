@@ -5,15 +5,15 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.log4j.Logger;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnJndi;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 
 import javax.sql.DataSource;
@@ -25,16 +25,24 @@ import javax.sql.DataSource;
 @MapperScan(basePackages = {"cn.cityre.mis.sys.dao"}, sqlSessionFactoryRef = "misSqlSessionFactory")
 public class MisDaoConfig {
     private static final Logger log = Logger.getLogger(MisDaoConfig.class);
-    @Autowired
-    Environment env;
+    @Value("${jdbc.mis.connection.driver_class}")
+    private String driverName;
+    @Value("${jdbc.mis.connection.url}")
+    private String url;
+    @Value("${jdbc.mis.connection.username}")
+    private String username;
+    @Value("${jdbc.mis.connection.password}")
+    private String password;
+
 
     /**
      * mis 库 jndi
      *
      * @return
      */
-    @Bean("misDataSource")
+    @Bean(name = "misDataSource")
     @ConditionalOnJndi("jdbc/mis")
+    @Primary
     public DataSource misDataSourceJNDI() {
         log.info("Load misDataSource from JNDI");
         final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
@@ -49,14 +57,15 @@ public class MisDaoConfig {
      * @return
      */
     @Bean(name = "misDataSource", destroyMethod = "close")
-    @ConditionalOnMissingBean(value = BoneCPDataSource.class, name = "misDataSource")
+    @Primary
+    @ConditionalOnMissingBean(name = "misDataSource")
     public DataSource misDataSource() {
         log.info("Create misDataSource");
         BoneCPDataSource dataSource = new BoneCPDataSource();
-        dataSource.setDriverClass(env.getProperty("jdbc.mis.connection.driver_class"));
-        dataSource.setJdbcUrl(env.getProperty("jdbc.mis.connection.url"));
-        dataSource.setUsername(env.getProperty("jdbc.mis.connection.username"));
-        dataSource.setPassword(env.getProperty("jdbc.mis.connection.password"));
+        dataSource.setDriverClass(driverName);
+        dataSource.setJdbcUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
         dataSource.setIdleConnectionTestPeriodInMinutes(60);
         dataSource.setIdleMaxAgeInMinutes(240);
         dataSource.setMaxConnectionsPerPartition(10);
@@ -69,6 +78,7 @@ public class MisDaoConfig {
     }
 
     @Bean(name = "misSqlSessionFactory")
+    @Primary
     public SqlSessionFactory supportSqlSessionFactory(@Qualifier("misDataSource") DataSource misDataSource)
             throws Exception {
         SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
@@ -79,4 +89,12 @@ public class MisDaoConfig {
         return sqlSessionFactory.getObject();
     }
 
+    /**
+     * 配置事务管理器
+     */
+    @Bean(name = "misTransaction")
+    @Primary
+    public DataSourceTransactionManager transactionManager(@Qualifier("misDataSource") DataSource dateSource) throws Exception {
+        return new DataSourceTransactionManager(dateSource);
+    }
 }
