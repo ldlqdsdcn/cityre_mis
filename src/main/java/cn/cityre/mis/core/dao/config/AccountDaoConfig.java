@@ -18,6 +18,7 @@ import javax.sql.DataSource;
 
 /**
  * Created by 刘大磊 on 2017/8/23 14:10.
+ * 中心账户库 数据源 mybatis配置
  */
 @Configuration
 @MapperScan(basePackages = {"cn.cityre.mis.account.dao"}, sqlSessionFactoryRef = "accountSqlSessionFactory")
