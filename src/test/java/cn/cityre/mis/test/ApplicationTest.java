@@ -11,5 +11,6 @@ public class ApplicationTest extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
+
     }
 }

@@ -6,7 +6,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.log4j.Logger;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
-import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnJndi;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -21,16 +20,17 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 
 /**
  * Created by 刘大磊 on 2017/8/22 9:02.
  */
 @Configuration
 @MapperScan(basePackages = {
-        "cn.cityre.mis.sys.dao" }, sqlSessionFactoryRef = "misSqlSessionFactory")
+        "cn.cityre.mis.sys.dao"}, sqlSessionFactoryRef = "misSqlSessionFactory")
 public class RootConfig implements EnvironmentAware {
     private static final Logger logger = Logger.getLogger(RootConfig.class);
     Environment env;
@@ -54,6 +54,7 @@ public class RootConfig implements EnvironmentAware {
         ehCacheCacheManager.setTransactionAware(true);
         return ehCacheCacheManager;
     }
+
     @Bean(name = "misSqlSessionFactory")
     public SqlSessionFactory supportSqlSessionFactory(@Qualifier("misDataSource") DataSource supportDataSource)
             throws Exception {
@@ -94,16 +95,34 @@ public class RootConfig implements EnvironmentAware {
         dataSource.setInitSQL("SET NAMES 'utf8mb4'");
         return dataSource;
     }
+
     /**
      * 配置事务管理器
      */
     @Bean
     @Primary
-    public DataSourceTransactionManager transactionManager(@Qualifier("misDataSource")DataSource dateSource) throws Exception{
+    public DataSourceTransactionManager transactionManager(@Qualifier("misDataSource") DataSource dateSource) throws Exception {
         return new DataSourceTransactionManager(dateSource);
     }
+
+    /**
+     * 发送邮件
+     * @return
+     */
+    @Bean
+    public JavaMailSender javaMailSender() {
+        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+        javaMailSender.setHost(env.getProperty("mailserver.host"));
+        javaMailSender.setPort(Integer.parseInt(env.getProperty("mailserver.port")));
+        javaMailSender.setUsername(env.getProperty("mailserver.username"));
+        javaMailSender.setPassword(env.getProperty("mailserver.password"));
+        javaMailSender.setDefaultEncoding(env.getProperty("mailserver.default_encoding"));
+        javaMailSender.getJavaMailProperties().put("mail.smtp.auth", Boolean.parseBoolean(env.getProperty("mailserver.smtp.auth")));
+        return javaMailSender;
+    }
+
     @Override
     public void setEnvironment(Environment environment) {
-        this.env=environment;
+        this.env = environment;
     }
 }
