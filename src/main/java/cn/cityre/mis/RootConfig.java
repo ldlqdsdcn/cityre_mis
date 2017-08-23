@@ -1,6 +1,7 @@
 package cn.cityre.mis;
 
 import cn.cityre.mis.core.dao.config.AccountDaoConfig;
+import cn.cityre.mis.core.dao.config.CenterDaoConfig;
 import cn.cityre.mis.core.dao.config.MisDaoConfig;
 import net.sf.ehcache.CacheManager;
 import org.apache.log4j.Logger;
@@ -19,7 +20,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
  * Created by 刘大磊 on 2017/8/22 9:02.
  */
 @Configuration
-@Import(value = {MisDaoConfig.class, AccountDaoConfig.class})
+@Import(value = {MisDaoConfig.class, AccountDaoConfig.class, CenterDaoConfig.class})
 @ComponentScan("cn.cityre.mis.**.service")
 public class RootConfig {
     private static final Logger log = Logger.getLogger(RootConfig.class);
