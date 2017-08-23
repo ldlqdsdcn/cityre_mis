@@ -66,25 +66,155 @@ public class RootConfig implements EnvironmentAware {
         return sqlSessionFactory.getObject();
     }
 
+    /**
+     * mis 库 jndi
+     *
+     * @return
+     */
     @Bean(name = {"misDataSource"})
     @ConditionalOnJndi("jdbc/mis")
-    public DataSource supportDataSourceJNDI() {
-        logger.info("Load restDataSource from JNDI");
+    public DataSource misDataSourceJNDI() {
+        logger.info("Load misDataSource from JNDI");
         final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
         dsLookup.setResourceRef(true);
-        DataSource dataSource = dsLookup.getDataSource("jdbc/supporting");
+        DataSource dataSource = dsLookup.getDataSource("jdbc/mis");
         return dataSource;
     }
 
+    /**
+     * mis库 jdbc
+     *
+     * @return
+     */
     @Bean(name = {"misDataSource"}, destroyMethod = "close")
     @ConditionalOnMissingBean(value = DataSource.class, name = "misDataSource")
-    public DataSource supportDataSource() {
-        logger.info("Create restDataSource");
+    public DataSource misDataSource() {
+        logger.info("Create misDataSource");
         BoneCPDataSource dataSource = new BoneCPDataSource();
         dataSource.setDriverClass(env.getProperty("jdbc.mis.connection.driver_class"));
         dataSource.setJdbcUrl(env.getProperty("jdbc.mis.connection.url"));
         dataSource.setUsername(env.getProperty("jdbc.mis.connection.username"));
         dataSource.setPassword(env.getProperty("jdbc.mis.connection.password"));
+        dataSource.setIdleConnectionTestPeriodInMinutes(60);
+        dataSource.setIdleMaxAgeInMinutes(240);
+        dataSource.setMaxConnectionsPerPartition(10);
+        dataSource.setMinConnectionsPerPartition(1);
+        dataSource.setPartitionCount(2);
+        dataSource.setAcquireIncrement(5);
+        dataSource.setStatementsCacheSize(100);
+        dataSource.setInitSQL("SET NAMES 'utf8mb4'");
+        return dataSource;
+    }
+
+    /**
+     * 中心库jndi
+     *
+     * @return
+     */
+    @Bean(name = {"centerDataSource"})
+    @ConditionalOnJndi("jdbc/center")
+    public DataSource centerDataSourceJNDI() {
+        logger.info("Load centerDataSource from JNDI");
+        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
+        dsLookup.setResourceRef(true);
+        DataSource dataSource = dsLookup.getDataSource("jdbc/center");
+        return dataSource;
+    }
+
+    /**
+     * 中心库 jdbc
+     *
+     * @return
+     */
+    @Bean(name = {"centerDataSource"}, destroyMethod = "close")
+    @ConditionalOnMissingBean(value = DataSource.class, name = "centerDataSource")
+    public DataSource supportDataSource() {
+        logger.info("Create centerDataSource");
+        BoneCPDataSource dataSource = new BoneCPDataSource();
+        dataSource.setDriverClass(env.getProperty("jdbc.center.connection.driver_class"));
+        dataSource.setJdbcUrl(env.getProperty("jdbc.center.connection.url"));
+        dataSource.setUsername(env.getProperty("jdbc.center.connection.username"));
+        dataSource.setPassword(env.getProperty("jdbc.center.connection.password"));
+        dataSource.setIdleConnectionTestPeriodInMinutes(60);
+        dataSource.setIdleMaxAgeInMinutes(240);
+        dataSource.setMaxConnectionsPerPartition(10);
+        dataSource.setMinConnectionsPerPartition(1);
+        dataSource.setPartitionCount(2);
+        dataSource.setAcquireIncrement(5);
+        dataSource.setStatementsCacheSize(100);
+        dataSource.setInitSQL("SET NAMES 'utf8mb4'");
+        return dataSource;
+    }
+    /**
+     * 中心账户库jndi
+     *
+     * @return
+     */
+    @Bean(name = {"accountDataSource"})
+    @ConditionalOnJndi("jdbc/account")
+    public DataSource accountDataSourceJNDI() {
+        logger.info("Load accountDataSource from JNDI");
+        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
+        dsLookup.setResourceRef(true);
+        DataSource dataSource = dsLookup.getDataSource("jdbc/account");
+        return dataSource;
+    }
+
+    /**
+     * 中心账户库 jdbc
+     *
+     * @return
+     */
+    @Bean(name = {"accountDataSource"}, destroyMethod = "close")
+    @ConditionalOnMissingBean(value = DataSource.class, name = "accountDataSource")
+    public DataSource accountDataSource() {
+        logger.info("Create accountDataSource");
+        BoneCPDataSource dataSource = new BoneCPDataSource();
+        dataSource.setDriverClass(env.getProperty("jdbc.account.connection.driver_class"));
+        dataSource.setJdbcUrl(env.getProperty("jdbc.account.connection.url"));
+        dataSource.setUsername(env.getProperty("jdbc.account.connection.username"));
+        dataSource.setPassword(env.getProperty("jdbc.account.connection.password"));
+        dataSource.setIdleConnectionTestPeriodInMinutes(60);
+        dataSource.setIdleMaxAgeInMinutes(240);
+        dataSource.setMaxConnectionsPerPartition(10);
+        dataSource.setMinConnectionsPerPartition(1);
+        dataSource.setPartitionCount(2);
+        dataSource.setAcquireIncrement(5);
+        dataSource.setStatementsCacheSize(100);
+        dataSource.setInitSQL("SET NAMES 'utf8mb4'");
+        return dataSource;
+    }
+
+    /**
+     * 城市中心库jndi
+     *
+     * @return
+     */
+    @Bean(name = {"cityre_centerDataSource"})
+    @ConditionalOnJndi("jdbc/cityre_center")
+    public DataSource cityre_centerDataSourceJNDI() {
+
+        logger.info("Load cityre_centerDataSource from JNDI");
+        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
+        dsLookup.setResourceRef(true);
+        DataSource dataSource = dsLookup.getDataSource("jdbc/cityre_center");
+        return dataSource;
+    }
+
+    /**
+     * 城市中心库 jdbc
+     *
+     * @return
+     */
+    @Bean(name = {"cityre_centerDataSource"}, destroyMethod = "close")
+    @ConditionalOnMissingBean(value = DataSource.class, name = "cityre_centerDataSource")
+    public DataSource cityre_centerDataSource() {
+        logger.info("Create cityre_centerDataSource");
+        BoneCPDataSource dataSource = new BoneCPDataSource();
+        dataSource.setDriverClass(env.getProperty("jdbc.cityre_center.connection.driver_class"));
+        dataSource.setJdbcUrl(env.getProperty("jdbc.cityre_center.connection.url"));
+        dataSource.setUsername(env.getProperty("jdbc.cityre_center.connection.username"));
+        dataSource.setPassword(env.getProperty("jdbc.cityre_center.connection.password"));
         dataSource.setIdleConnectionTestPeriodInMinutes(60);
         dataSource.setIdleMaxAgeInMinutes(240);
         dataSource.setMaxConnectionsPerPartition(10);
@@ -107,6 +237,7 @@ public class RootConfig implements EnvironmentAware {
 
     /**
      * 发送邮件
+     *
      * @return
      */
     @Bean
