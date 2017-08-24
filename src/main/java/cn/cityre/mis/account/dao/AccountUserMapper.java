@@ -20,6 +20,7 @@ public interface AccountUserMapper {
 
     int updateByPrimaryKey(AccountUser record);
 
+
     List<AccountUser> selectList(Map<String,Object> param);
 
     PageMyBatis<AccountUser> selectList(Map<String, Object> param, RowBounds rowBounds);

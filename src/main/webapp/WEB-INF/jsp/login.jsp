@@ -7,16 +7,72 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>用户登录</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="keywords" content="cremis">
+    <meta name="description" content="Mis系统-登录界面">
+    <title>Mis系统-登录界面</title>
+
+    <link rel="stylesheet" href="/css/cremis_common.css">
+
 </head>
-<body>
-<form action="/login" method="post">
-    <input type="text" placeholder="用户名" name="username"><br>
-    <input type="text" placeholder="密码" name="password"><br>
-    <input type="submit" value="登录">
-    <c:out value="${message}"/>
-</form>
+
+<body class="login-bg">
+
+<div class="login-box">
+    <div class="login-center-margin">
+        <img src="<c:url value="/image/logo_cityre2017.png"/>" width="36%">
+    </div>
+    <header>
+        <h1>Mis系统-登录管理系统</h1>
+    </header>
+    <div class="login-main">
+        <form action="index.html" method="post">
+            <div class="login-form-item">
+                <label class="login-icon">
+                    <i class="icon-font">&#xe609;</i>
+                </label>
+                <input type="text" name="userName" lay-verify="userName" autocomplete="off" placeholder="这里输入登录名"
+                       class="login-input">
+            </div>
+            <div class="login-form-item">
+                <label class="login-icon">
+                    <i class="icon-font">&#xe606;</i>
+                </label>
+                <input type="password" name="password" lay-verify="password" autocomplete="off" placeholder="这里输入密码"
+                       class="login-input">
+            </div>
+            <!--<div class="login-form-item">-->
+            <!--<label class="login-icon">-->
+            <!--<i class="icon-font">&#xe600;</i>-->
+            <!--</label>-->
+            <!--<select class="login-input">-->
+            <!--<option label="简体中文" value="string:zh_CN" selected="selected">简体中文</option>-->
+            <!--<option label="English USA" value="string:en_US">English USA</option>-->
+            <!--</select>-->
+            <!--</div>-->
+            <div class="login-form-item">
+                <div class="pull-left login-remember">
+                    <input type="checkbox" name="rememberMe" value="true" title="记住帐号">
+                    <label>记住帐号？</label>
+                </div>
+                <div class="pull-right">
+                    <button class="login-btn">登录</button>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </form>
+    </div>
+</div>
+<footer>
+    <p>Copyright © 2017 CreMis系统</p>
+</footer>
+
 </body>
 </html>

@@ -1,7 +1,7 @@
 package cn.cityre.mis.common.web.controller;
 
 import cn.cityre.mis.common.exception.AccountException;
-import cn.cityre.mis.sys.dao.UserMapper;
+import cn.cityre.mis.sys.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class LoginController {
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String showLogin() {
         return "login";

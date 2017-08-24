@@ -1,12 +1,13 @@
 package cn.cityre.mis.sys.service.impl;
 
-import cn.cityre.mis.sys.dao.UserMapper;
-import cn.cityre.mis.sys.model.User;
+import cn.cityre.mis.account.dao.AccountUserMapper;
+import cn.cityre.mis.account.model.AccountUser;
 import cn.cityre.mis.sys.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,17 +16,20 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    private UserMapper userMapper;
+    private AccountUserMapper accountUserMapper;
 
     /**
-     * @see UserService#getUserByUsername(String)
      * @param username
      * @return
+     * @see UserService#getUserByUsername(String)
      */
-    public User getUserByUsername(String username) {
+    public AccountUser getUserByUsername(String username) {
         Map param = new HashMap();
-        param.put("username", username);
-        User user = userMapper.selectByExample(param);
-        return user;
+        param.put("userId", username);
+        List<AccountUser> accountUserList = accountUserMapper.selectList(param);
+        if (accountUserList.size() > 0) {
+            return accountUserList.get(0);
+        }
+        return null;
     }
 }

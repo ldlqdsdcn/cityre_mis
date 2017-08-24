@@ -89,6 +89,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         shiroFilterFactoryBean.setFilterChainDefinitions(" /js/**=anon\n" +
                 "/fonts/**=anon\n" +
                 "/css/**=anon\n" +
+                "/image/**=anon\n" +
                 "/login.jsp=anon\n" +
                 "/login=anon\n" +
                 "/languages=anon\n" +
