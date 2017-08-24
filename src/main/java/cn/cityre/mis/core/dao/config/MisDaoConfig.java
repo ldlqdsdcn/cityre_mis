@@ -2,9 +2,10 @@ package cn.cityre.mis.core.dao.config;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.log4j.Logger;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnJndi;
@@ -24,7 +25,7 @@ import javax.sql.DataSource;
 @Configuration
 @MapperScan(basePackages = {"cn.cityre.mis.sys.dao"}, sqlSessionFactoryRef = "misSqlSessionFactory")
 public class MisDaoConfig {
-    private static final Logger log = Logger.getLogger(MisDaoConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(MisDaoConfig.class);
     @Value("${jdbc.mis.connection.driver_class}")
     private String driverName;
     @Value("${jdbc.mis.connection.url}")

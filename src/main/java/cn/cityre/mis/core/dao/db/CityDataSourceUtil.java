@@ -5,12 +5,14 @@ package cn.cityre.mis.core.dao.db;
  */
 public class CityDataSourceUtil {
     /**
-     * 修改数据源名
+     * 切换数据源
+     *
      * @param cityCode
      * @return
      */
-    public static String changeDB(String cityCode) {
-        String dbname = "dataSource_" + cityCode;
-        return dbname;
+    public static void changeDB(String cityCode) {
+
+        DataSourceContextHolder.setDbType(cityCode);
+
     }
 }

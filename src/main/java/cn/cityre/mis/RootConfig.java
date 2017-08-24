@@ -1,11 +1,9 @@
 package cn.cityre.mis;
 
-import cn.cityre.mis.core.dao.config.AccountDaoConfig;
-import cn.cityre.mis.core.dao.config.CenterDaoConfig;
-import cn.cityre.mis.core.dao.config.CityrecenterDaoConfig;
-import cn.cityre.mis.core.dao.config.MisDaoConfig;
+import cn.cityre.mis.core.dao.config.*;
 import net.sf.ehcache.CacheManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
@@ -21,10 +19,10 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
  * Created by 刘大磊 on 2017/8/22 9:02.
  */
 @Configuration
-@Import(value = {MisDaoConfig.class, AccountDaoConfig.class, CenterDaoConfig.class, CityrecenterDaoConfig.class})
+@Import(value = {MisDaoConfig.class, AccountDaoConfig.class, CenterDaoConfig.class, CityrecenterDaoConfig.class, CityDaoConfig.class})
 @ComponentScan("cn.cityre.mis.**.service")
 public class RootConfig {
-    private static final Logger log = Logger.getLogger(RootConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(RootConfig.class);
 
     @Value("${mailserver.host}")
     private String host;
