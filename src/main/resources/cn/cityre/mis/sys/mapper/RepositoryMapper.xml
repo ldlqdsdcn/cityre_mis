@@ -20,6 +20,22 @@
     from sys_repository
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="getAllRepositories" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_repository
+  </select>
+  <select id="getUserRepositories" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT t.*
+    FROM sys_repository t INNER JOIN sys_group_privileges t2 ON t.id = t2.repository_id
+        INNER JOIN sys_usergroup t3 ON t2.group_id = t3.group_id
+    WHERE t3.unionUid =  #{unionUid,jdbcType=VARCHAR}
+    UNION
+    SELECT t4.*
+    FROM sys_repository t4 INNER JOIN sys_user_privileges t5 ON t4.id = t5.repository_id
+    WHERE t5.unionUid = #{unionUid,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sys_repository
     where id = #{id,jdbcType=INTEGER}

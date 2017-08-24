@@ -11,8 +11,13 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HomeController {
 
-    @RequestMapping({"/home", "/"})
+    @RequestMapping({"index", "/"})
     public ModelAndView showHome() {
-        return new ModelAndView("home");
+        return new ModelAndView("index");
+    }
+    @RequestMapping("kouhao")
+    public String showKouhao()
+    {
+        return "common/kouhao";
     }
 }

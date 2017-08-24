@@ -11,7 +11,8 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
@@ -48,15 +49,11 @@
                 <input type="password" name="password" lay-verify="password" autocomplete="off" placeholder="这里输入密码"
                        class="login-input">
             </div>
-            <!--<div class="login-form-item">-->
-            <!--<label class="login-icon">-->
-            <!--<i class="icon-font">&#xe600;</i>-->
-            <!--</label>-->
-            <!--<select class="login-input">-->
-            <!--<option label="简体中文" value="string:zh_CN" selected="selected">简体中文</option>-->
-            <!--<option label="English USA" value="string:en_US">English USA</option>-->
-            <!--</select>-->
-            <!--</div>-->
+            <c:if test="${message!=null}">
+                <div class="login-form-item" style="color: red;">
+                    <c:out value="${message}"/>
+                </div>
+            </c:if>
             <div class="login-form-item">
                 <div class="pull-left login-remember">
                     <input type="checkbox" name="rememberMe" value="true" title="记住帐号">

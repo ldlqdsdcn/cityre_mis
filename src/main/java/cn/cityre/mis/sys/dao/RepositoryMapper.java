@@ -1,6 +1,9 @@
 package cn.cityre.mis.sys.dao;
 
 import cn.cityre.mis.sys.model.Repository;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface RepositoryMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,8 @@ public interface RepositoryMapper {
     int updateByPrimaryKeySelective(Repository record);
 
     int updateByPrimaryKey(Repository record);
+
+    List<Repository> getUserRepositories(@Param("unionUid") String unionUid);
+
+    List<Repository> getAllRepositories();
 }

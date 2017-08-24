@@ -396,7 +396,7 @@ $(function(){
 	/*菜单json*/
 	var menu = [{"id":"1","name":"系统设置","parentId":"0","url":"","icon":"","order":"1","isHeader":"1","childMenus":[
 					{"id":"3","name":"一般规则","parentId":"1","url":"","icon":"&#xe604;","order":"1","isHeader":"0","childMenus":[
-						{"id":"4","name":"二级菜单","parentId":"3","url":"test1.html","icon":"","order":"1","isHeader":"0","childMenus":""},
+						{"id":"4","name":"菜单设置","parentId":"3","url":"sys/menuList","icon":"","order":"1","isHeader":"0","childMenus":""},
 						{"id":"5","name":"二级菜单","parentId":"3","url":"test2.html","icon":"","order":"1","isHeader":"0","childMenus":""}
 					]},
 					{"id":"6","name":"组织管理","parentId":"1","url":"","icon":"&#xe602;","order":"1","isHeader":"0","childMenus":[
