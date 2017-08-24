@@ -16,7 +16,10 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
+import java.util.Properties;
 
 /**
  * Created by 刘大磊 on 2017/8/21 16:15.
@@ -118,5 +121,16 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         aasa.setSecurityManager(securityManager);
         return new AuthorizationAttributeSourceAdvisor();
     }
+    @Bean
+    public SimpleMappingExceptionResolver simpleMappingExceptionResolver()
+    {
+        SimpleMappingExceptionResolver simpleMappingExceptionResolver=new SimpleMappingExceptionResolver();
+        Properties properties=new Properties();
+        properties.put("org.apache.shiro.authz.UnauthorizedException","error/noprivileges");
+        properties.put("org.apache.shiro.authz.UnauthenticatedException","error/noprivileges");
+        simpleMappingExceptionResolver.setExceptionMappings(properties);
+        return simpleMappingExceptionResolver;
+    }
+
 
 }
