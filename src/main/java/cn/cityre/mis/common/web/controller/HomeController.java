@@ -20,4 +20,9 @@ public class HomeController {
     {
         return "common/kouhao";
     }
+    @RequestMapping("error/noprivileges")
+    public String noprivileges()
+    {
+        return "error/noprivileges";
+    }
 }
