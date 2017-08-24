@@ -33,12 +33,12 @@
         <h1>Mis系统-登录管理系统</h1>
     </header>
     <div class="login-main">
-        <form action="index.html" method="post">
+        <form action="<c:url value="/login"/>" method="post">
             <div class="login-form-item">
                 <label class="login-icon">
                     <i class="icon-font">&#xe609;</i>
                 </label>
-                <input type="text" name="userName" lay-verify="userName" autocomplete="off" placeholder="这里输入登录名"
+                <input type="text" name="username" lay-verify="username" autocomplete="off" placeholder="这里输入登录名"
                        class="login-input">
             </div>
             <div class="login-form-item">

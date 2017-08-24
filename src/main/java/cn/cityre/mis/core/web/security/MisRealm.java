@@ -4,11 +4,17 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Created by 刘大磊 on 2017/8/22 10:54.
  */
 public class MisRealm extends AuthorizingRealm {
+    @Value("${account.name}")
+    private String account;
+    @Value("${account.pwd}")
+    private String password;
+
     /**
      * 授权
      *
@@ -29,7 +35,13 @@ public class MisRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        AuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo("crecity", "88888888", "mis");
-        return authenticationInfo;
+        AuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(authenticationToken.getPrincipal(), authenticationToken.getCredentials(), "mis");
+        UsernamePasswordToken usernamePasswordToken=(UsernamePasswordToken)authenticationToken;
+        String pwd=new String(usernamePasswordToken.getPassword());
+        if (authenticationToken.getPrincipal().equals(account) && pwd.equals(password)) {
+            return authenticationInfo;
+        }
+        throw new AccountException("用户名或密码错误");
+
     }
 }
