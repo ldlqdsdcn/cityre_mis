@@ -3,11 +3,13 @@ package cn.cityre.mis.core.web.security;
 import cn.cityre.mis.util.Md5SaltTool;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Created by 刘大磊 on 2017/8/22 10:54.
@@ -28,8 +30,11 @@ public class MisRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         log.debug("------------------------------>doGetAuthorizationInfo-11");
-        return null;
+        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+        //authorizationInfo.addStringPermission("sys_menu");
+        return authorizationInfo;
     }
+
 
     /**
      * 认证

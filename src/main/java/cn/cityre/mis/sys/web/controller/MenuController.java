@@ -10,8 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 public class MenuController {
-    @RequiresPermissions("sys_menu")
+
     @RequestMapping("/sys/menuList")
+    @RequiresPermissions("sys_menu")
     public ModelAndView showList()
     {
         ModelAndView modelAndView=new ModelAndView("sys/menuList");
