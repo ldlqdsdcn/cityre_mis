@@ -73,7 +73,6 @@ public class CenterDaoConfig {
         dataSource.setInitSQL("SET NAMES 'utf8'");
         return dataSource;
     }
-
     @Bean(name = "centerSqlSessionFactory")
     public SqlSessionFactory centerSqlSessionFactory(@Qualifier("centerDataSource") DataSource accountDataSource)
             throws Exception {

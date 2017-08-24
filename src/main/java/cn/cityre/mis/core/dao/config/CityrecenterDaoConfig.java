@@ -1,7 +1,6 @@
 package cn.cityre.mis.core.dao.config;
 
 import com.jolbox.bonecp.BoneCPDataSource;
-import com.mysql.jdbc.log.LogFactory;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -74,7 +73,6 @@ public class CityrecenterDaoConfig {
         dataSource.setInitSQL("SET NAMES 'utf8'");
         return dataSource;
     }
-
     @Bean(name = "cityre_centerSqlSessionFactory")
     public SqlSessionFactory cityre_centerSqlSessionFactory(@Qualifier("cityre_centerDataSource") DataSource accountDataSource)
             throws Exception {

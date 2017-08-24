@@ -73,7 +73,6 @@ public class AccountDaoConfig {
         dataSource.setInitSQL("SET NAMES 'utf8mb4'");
         return dataSource;
     }
-
     @Bean(name = "accountSqlSessionFactory")
     public SqlSessionFactory accountSqlSessionFactory(@Qualifier("accountDataSource") DataSource accountDataSource)
             throws Exception {

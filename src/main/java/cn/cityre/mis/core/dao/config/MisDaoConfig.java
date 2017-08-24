@@ -34,8 +34,6 @@ public class MisDaoConfig {
     private String username;
     @Value("${jdbc.mis.connection.password}")
     private String password;
-
-
     /**
      * mis 库 jndi
      *
@@ -51,7 +49,6 @@ public class MisDaoConfig {
         DataSource dataSource = dsLookup.getDataSource("jdbc/mis");
         return dataSource;
     }
-
     /**
      * mis库 jdbc
      *
@@ -89,7 +86,6 @@ public class MisDaoConfig {
         sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:cn/cityre/mis/sys/mapper/*Mapper.xml"));
         return sqlSessionFactory.getObject();
     }
-
     /**
      * 配置事务管理器
      */
